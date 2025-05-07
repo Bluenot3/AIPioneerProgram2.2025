@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <base href="https://api.cohere.ai/">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ZEN AI Co. & Cohere API Nexus: GenPlay</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #00ffff; /* Neon Cyan */
+            --secondary-color: #ff00ff; /* Neon Magenta */
+            --accent-color: #e94560; /* Original Accent */
+            --bg-dark-1: #0a0a1f; /* Deep Space Blue */
+            --bg-dark-2: #101028;
+            --bg-light-1: rgba(200, 220, 255, 0.05);
+            --bg-light-2: rgba(200, 220, 255, 0.1);
+            --text-light: #f0f0f8;
+            --text-medium: #bdc1c6;
+            --shadow-color: rgba(0, 255, 255, 0.5);
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--bg-dark-1);
+            color: var(--text-medium);
+            overflow-x: hidden; /* Prevent horizontal scroll always */
+            overflow-y: auto; /* Allow vertical scroll if content overflows (e.g. in stacked view) */
+        }
+
+        #particles-js {
+            position: fixed; /* Fixed position so it doesn't affect layout flow */
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+
+        .container {
+            display: flex;
+            height: 100%;
+            position: relative;
+            z-index: 1;
+        }
+
+        .sidebar {
+            width: 340px; /* Slightly reduced default width */
+            flex-shrink: 0; /* Prevent sidebar from shrinking less than its width */
+            background: var(--bg-light-1);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            overflow-y: auto;
+            border-right: 1px solid var(--primary-color);
+            box-shadow: 5px 0 15px rgba(0,0,0,0.2);
+        }
+
+        .main {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .header-title {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--primary-color);
+            text-align: center;
+            font-size: 2.5em;
+            letter-spacing: 2px;
+            text-shadow: 0 0 5px var(--primary-color),
+                         0 0 10px var(--primary-color),
+                         0 0 20px var(--secondary-color),
+                         0 0 30px var(--secondary-color),
+                         2px 2px 5px rgba(0,0,0,0.7);
+            animation: pulseTitle 3s infinite alternate;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+        .zen-branding {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--secondary-color);
+            font-size: 0.8em;
+            text-align: center;
+            margin-top: -10px;
+            margin-bottom: 15px;
+        }
+
+
+        @keyframes pulseTitle {
+            from { opacity: 0.8; }
+            to { opacity: 1; }
+        }
+
+        h2 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--primary-color);
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+            border-bottom: 1px solid var(--secondary-color);
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+
+        input, select, textarea {
+            width: 100%; /* Takes full width of parent, padding included due to box-sizing */
+            padding: 10px;
+            margin: 10px 0;
+            background: var(--bg-light-2);
+            border: 1px solid var(--primary-color);
+            border-radius: 8px;
+            color: var(--text-light);
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 10px var(--secondary-color), inset 0 0 8px rgba(0,0,0,0.3);
+        }
+
+        button {
+            background: linear-gradient(145deg, var(--accent-color), #c0392b);
+            color: var(--text-light);
+            border: none;
+            padding: 10px 20px;
+            margin: 12px 0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        button:hover {
+            background: linear-gradient(145deg, var(--secondary-color), var(--primary-color));
+            color: var(--bg-dark-1);
+            box-shadow: 0 0 15px var(--primary-color), 0 0 25px var(--secondary-color);
+            transform: translateY(-2px);
+        }
+        button:active {
+            transform: translateY(1px);
+        }
+
+        #output {
+            background: var(--bg-light-2);
+            padding: 15px;
+            border-radius: 8px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            margin-top: 15px;
+            min-height: 80px;
+            width: 100%; /* Take full width of .main content area */
+            max-width: 750px; /* But not too wide on large screens */
+            border: 1px solid var(--primary-color);
+            box-shadow: 0 0 10px var(--shadow-color);
+            transition: all 0.3s ease;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.85em;
+            color: var(--text-light);
+        }
+
+        #gameCanvas {
+            border: 2px solid var(--secondary-color);
+            display: none;
+            margin-top: 15px;
+            box-shadow: 0 0 20px var(--secondary-color);
+            background-color: #050510; /* Darker canvas bg for contrast */
+            max-width: 100%; /* Ensure canvas doesn't overflow its container */
+        }
+
+        .loader {
+            border: 5px solid var(--bg-light-1);
+            border-top: 5px solid var(--primary-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+            display: none;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .sidebar::-webkit-scrollbar { width: 8px; }
+        .sidebar::-webkit-scrollbar-track { background: var(--bg-dark-2); }
+        .sidebar::-webkit-scrollbar-thumb { background-color: var(--primary-color); border-radius: 10px; border: 2px solid var(--bg-dark-2); }
+        .sidebar::-webkit-scrollbar-thumb:hover { background-color: var(--secondary-color); }
+
+        label {
+            display: block;
+            margin-top: 8px;
+            margin-bottom: 2px;
+            color: var(--text-medium);
+            font-size: 0.85em;
+        }
+        #gameInfo {
+            text-align:center;
+            margin-bottom:10px;
+            color: var(--text-light);
+            width: 100%;
+            max-width: 750px;
+            font-size: 0.9em;
+        }
+        #gameInfo h2 { font-size: 1.3em; margin-bottom: 5px;}
+        #gameInfo p { margin-top: 0; }
+
+        /* Responsive adjustments for smaller screens/embeds */
+        @media (max-width: 650px) {
+            body, html {
+                height: auto; /* Allow body to grow with content */
+            }
+            .container {
+                flex-direction: column;
+                height: auto;
+            }
+            .sidebar {
+                width: 100%;
+                max-width: 100%;
+                border-right: none;
+                border-bottom: 1px solid var(--primary-color);
+                max-height: 60vh; /* Limit sidebar height and make it scrollable */
+                padding: 15px;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            }
+            .main {
+                padding: 15px;
+                min-height: 40vh; /* Ensure main has some height */
+            }
+            .header-title {
+                font-size: 2em;
+            }
+            h2 { font-size: 1.4em; }
+            input, select, textarea, button { font-size: 0.85em; padding: 8px; }
+            button { padding: 8px 15px; }
+            #output { font-size: 0.8em; }
+        }
+
+    </style>
+</head>
+<body>
+    <div id="particles-js"></div>
+    <div class="container">
+        <div class="sidebar">
+            <h2>Cohere API Nexus</h2>
+            <label for="apiKey">Cohere API Key:</label>
+            <input type="password" id="apiKey" placeholder="Your Cohere API Key">
+            <p style="font-size: 0.7em; color: var(--text-medium); margin-top: -5px; margin-bottom: 8px;"> (Keep your API key secret!)</p>
+
+            <label for="endpoint">Select Endpoint / Game:</label>
+            <select id="endpoint">
+                <option value="generate">Generate Text</option>
+                <option value="chat">Chat Completion</option>
+                <option value="embed">Embeddings</option>
+                <option value="classify">Classification</option>
+                <option value="tokenize">Tokenize</option>
+                <option value="detokenize">Detokenize</option>
+                <option value="summarize">Summarize Text</option>
+                <option value="generateGame">Generate Game</option>
+            </select>
+            <label for="prompt">Prompt / Text / Input:</label>
+            <textarea id="prompt" rows="3" placeholder="Enter prompt or text..."></textarea>
+            <div id="additionalParams"></div>
+            <button onclick="handleAction()" id="executeButton">Execute</button>
+            <div id="apiStatus" style="margin-top:10px; font-size:0.85em; text-align: center;"></div>
+        </div>
+        <div class="main">
+            <h1 class="header-title">ZEN AI Co. & Cohere</h1>
+            <p class="zen-branding">Pioneering AI Literacy for Youth</p>
+            <p style="text-align:center; color: var(--text-medium); margin-bottom: 15px; font-size:0.9em;">Explore Cohere's capabilities or generate interactive games!</p>
+            <div class="loader" id="loader"></div>
+            <div id="gameInfo"></div>
+            <pre id="output">Your AI output will appear here...</pre>
+            <canvas id="gameCanvas"></canvas>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+    <script>
+        // JavaScript remains largely the same, but the canvas size calculation in generateGame is key
+
+        const endpointSelect = document.getElementById('endpoint');
+        const additionalParamsDiv = document.getElementById('additionalParams');
+        const outputDiv = document.getElementById('output');
+        const gameCanvas = document.getElementById('gameCanvas');
+        const ctx = gameCanvas.getContext('2d');
+        const loader = document.getElementById('loader');
+        const executeButton = document.getElementById('executeButton');
+        const apiStatus = document.getElementById('apiStatus');
+        const gameInfoDiv = document.getElementById('gameInfo');
+
+        particlesJS("particles-js", { /* ParticleJS config unchanged */
+            "particles": {"number": {"value": 70, "density": {"enable": true, "value_area": 700}},"color": {"value": ["#00ffff", "#ff00ff", "#ffffff"]},"shape": {"type": "circle","stroke": {"width": 0, "color": "#000000"},"polygon": {"nb_sides": 5}},"opacity": {"value": 0.5,"random": true,"anim": {"enable": true,"speed": 1,"opacity_min": 0.1,"sync": false}},"size": {"value": 2.5,"random": true,"anim": {"enable": false,"speed": 40,"size_min": 0.1,"sync": false}},"line_linked": {"enable": true,"distance": 130,"color": "#ffffff","opacity": 0.15,"width": 1},"move": {"enable": true,"speed": 1.5,"direction": "none","random": false,"straight": false,"out_mode": "out","bounce": false,"attract": {"enable": false,"rotateX": 600,"rotateY": 1200}}},
+            "interactivity": {"detect_on": "canvas","events": {"onhover": {"enable": true,"mode": "repulse"},"onclick": {"enable": true,"mode": "push"},"resize": true},"modes": {"grab": {"distance": 300,"line_linked": {"opacity": 0.4}},"bubble": {"distance": 300,"size": 30,"duration": 2,"opacity": 8,"speed": 3},"repulse": {"distance": 80,"duration": 0.4},"push": {"particles_nb": 4},"remove": {"particles_nb": 2}}},
+            "retina_detect": true
+        });
+
+        const cohereModels = { /* cohereModels config unchanged */
+            generate: ["command-r-plus", "command-r", "command", "command-light", "command-nightly"],
+            chat: ["command-r-plus", "command-r", "command", "command-light", "command-nightly"],
+            embed: ["embed-english-v3.0", "embed-multilingual-v3.0", "embed-english-light-v3.0", "embed-multilingual-light-v3.0"],
+            summarize: ["command", "command-light"],
+            classify: ["embed-english-light-v3.0", "embed-multilingual-light-v3.0"]
+        };
+
+        endpointSelect.addEventListener('change', updateAdditionalParams);
+
+        function updateAdditionalParams() { /* updateAdditionalParams function largely unchanged, check IDs if issues */
+            const endpoint = endpointSelect.value;
+            let params = '';
+            gameCanvas.style.display = 'none';
+            gameInfoDiv.innerHTML = '';
+            outputDiv.style.display = 'block'; // Default to showing outputDiv
+
+            // Dynamically create IDs for model selects to avoid collision if same ID is used across cases
+            const modelId = `model_${endpoint.replace(/\s+/g, '_')}`; // e.g. model_generate, model_chat
+
+            switch(endpoint) {
+                case 'generate':
+                    params = `
+                        <label for="${modelId}">Model:</label>
+                        <select id="${modelId}">${cohereModels.generate.map(m => `<option value="${m}">${m}</option>`).join('')}</select>
+                        <label for="max_tokens">Max Tokens:</label>
+                        <input type="number" id="max_tokens" placeholder="e.g., 300" value="300">
+                        <label for="temperature_generate">Temperature (0-2):</label>
+                        <input type="number" id="temperature_generate" placeholder="e.g., 0.75" step="0.01" min="0" max="2" value="0.75">
+                        <label for="k_generate">Top-k:</label>
+                        <input type="number" id="k_generate" placeholder="e.g., 0 (off)" value="0">
+                        <label for="p_generate">Top-p (Nucleus):</label>
+                        <input type="number" id="p_generate" placeholder="e.g., 0.75" step="0.01" min="0" max="1" value="0.75">
+                    `;
+                    break;
+                case 'chat':
+                    params = `
+                        <label for="${modelId}">Model:</label>
+                        <select id="${modelId}">${cohereModels.chat.map(m => `<option value="${m}">${m}</option>`).join('')}</select>
+                        <label for="conversation">Chat History (JSON - Optional):</label>
+                        <textarea id="conversation" rows="3" placeholder='[{"role": "USER", "message": "Hello!"}, {"role": "CHATBOT", "message": "Hi there!"}]'></textarea>
+                        <label for="temperature_chat">Temperature (0-1 for command-r+):</label>
+                        <input type="number" id="temperature_chat" placeholder="e.g., 0.3" step="0.01" min="0" max="1" value="0.3">
+                         <label for="preamble_chat">Preamble (System Prompt - Optional):</label>
+                        <textarea id="preamble_chat" rows="2" placeholder="e.g., You are a helpful assistant."></textarea>
+                    `;
+                    break;
+                case 'embed':
+                    params = `
+                        <label for="${modelId}">Model:</label>
+                        <select id="${modelId}">${cohereModels.embed.map(m => `<option value="${m}">${m}</option>`).join('')}</select>
+                        <label for="truncate_embed">Truncate:</label>
+                        <select id="truncate_embed"><option value="NONE">NONE</option><option value="START">START</option><option value="END">END</option></select>
+                        <label for="input_type_embed">Input Type:</label>
+                        <select id="input_type_embed">
+                            <option value="search_document">search_document</option>
+                            <option value="search_query">search_query</option>
+                            <option value="classification">classification</option>
+                            <option value="clustering">clustering</option>
+                        </select>
+                    `;
+                    break;
+                case 'classify':
+                    params = `
+                        <label for="${modelId}">Model (fine-tuned ID or base embed model):</label>
+                        <select id="${modelId}">${cohereModels.classify.map(m => `<option value="${m}">${m}</option>`).join('')}</select>
+                        <label for="examples_classify">Examples (JSON array of {text, label}):</label>
+                        <textarea id="examples_classify" rows="3" placeholder='[{"text": "This is great!", "label": "positive"}, ...]'></textarea>
+                        <label for="inputs_classify">Inputs (JSON array of strings - if not using Prompt field):</label>
+                        <textarea id="inputs_classify" rows="2" placeholder='["I love this product!", ...]'></textarea>
+                    `;
+                    break;
+                case 'summarize':
+                    params = `
+                        <label for="${modelId}">Model:</label>
+                        <select id="${modelId}">${cohereModels.summarize.map(m => `<option value="${m}">${m}</option>`).join('')}</select>
+                        <label for="length_summarize">Length:</label>
+                        <select id="length_summarize"><option value="short">Short</option><option value="medium">Medium</option><option value="long">Long</option></select>
+                        <label for="format_summarize">Format:</label>
+                        <select id="format_summarize"><option value="paragraph">Paragraph</option><option value="bullets">Bullets</option></select>
+                        <label for="extractiveness_summarize">Extractiveness:</label>
+                        <select id="extractiveness_summarize"><option value="low">Low</option><option value="medium" selected>Medium</option><option value="high">High</option></select>
+                        <label for="temperature_summarize">Temperature (0-1):</label>
+                        <input type="number" id="temperature_summarize" placeholder="e.g., 0.3" step="0.01" min="0" max="1" value="0.3">
+                    `;
+                    break;
+                case 'generateGame':
+                    params = `
+                        <label for="gameType">Select Game:</label>
+                        <select id="gameType">
+                            <option value="snake">Snake</option>
+                            <option value="tetris">Tetris (Basic)</option>
+                            <option value="pong">Pong (Basic)</option>
+                            <option value="aiStoryAdventure">AI Story Adventure (Cohere Powered)</option>
+                        </select>
+                        <label for="gameTheme">Game Theme (for AI Games & flavor):</label>
+                        <input type="text" id="gameTheme" placeholder="e.g., Cyberpunk, Ancient Egypt">
+                        <label for="primaryColor">Primary Color:</label>
+                        <input type="color" id="primaryColor" value="#00ff00">
+                        <label for="secondaryColor">Secondary Color:</label>
+                        <input type="color" id="secondaryColor" value="#ff0000">
+                        <label for="gameSpeed">Game Speed (1-10):</label>
+                        <input type="number" id="gameSpeed" placeholder="5" min="1" max="10" value="5">
+                        <label for="canvasSize">Max Canvas Size (px):</label>
+                        <input type="number" id="canvasSize" placeholder="400" value="400">
+                    `;
+                    outputDiv.style.display = 'none';
+                    break;
+            }
+            additionalParamsDiv.innerHTML = params;
+        }
+
+
+        async function handleAction() { /* handleAction function unchanged */
+            const endpoint = endpointSelect.value;
+            const apiKey = document.getElementById('apiKey').value;
+
+            if (!apiKey && endpoint !== 'generateGame') {
+                apiStatus.textContent = "Please enter your Cohere API key for API calls.";
+                apiStatus.style.color = "var(--accent-color)";
+                outputDiv.textContent = "API Key required for this operation.";
+                return;
+            } else if (!apiKey && endpoint === 'generateGame' && document.getElementById('gameType').value === 'aiStoryAdventure'){
+                 apiStatus.textContent = "API Key required for AI Story Adventure.";
+                apiStatus.style.color = "var(--accent-color)";
+                outputDiv.textContent = "Please enter your Cohere API key in the sidebar to play the AI Story Adventure.";
+                outputDiv.style.display = 'block';
+                gameCanvas.style.display = 'none';
+                return;
+            }
+            apiStatus.textContent = "";
+
+            if (endpoint === 'generateGame') {
+                await generateGame();
+            } else {
+                await callAPI();
+            }
+        }
+
+        let currentGameInterval = null;
+        let currentKeyListener = null;
+
+        function stopCurrentGame() { /* stopCurrentGame function unchanged, handles rAF and event listeners */
+             if (currentGameInterval) {
+                if (typeof currentGameInterval === 'number' && currentGameInterval < 100000) { // Heuristic: setInterval returns small numbers
+                    clearInterval(currentGameInterval);
+                } else { // Assumed rAF ID
+                    cancelAnimationFrame(currentGameInterval);
+                }
+                currentGameInterval = null;
+            }
+            if (currentKeyListener) {
+                if (typeof currentKeyListener === 'function') {
+                    document.removeEventListener('keydown', currentKeyListener);
+                } else if (typeof currentKeyListener === 'object' && currentKeyListener.down && currentKeyListener.up) { // For Pong
+                    document.removeEventListener('keydown', currentKeyListener.down);
+                    document.removeEventListener('keyup', currentKeyListener.up);
+                }
+                currentKeyListener = null;
+            }
+            if(ctx) {
+                ctx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+            }
+        }
+
+        async function callAPI() { /* callAPI function mostly unchanged, ensure model IDs are correct */
+            stopCurrentGame();
+            const apiKey = document.getElementById('apiKey').value;
+            const endpoint = endpointSelect.value;
+            let promptText = document.getElementById('prompt').value;
+
+            loader.style.display = 'block';
+            outputDiv.innerHTML = '';
+            executeButton.disabled = true;
+            apiStatus.textContent = `Calling ${endpoint}...`;
+            apiStatus.style.color = "var(--text-medium)";
+
+            let data = {};
+            let url = `https://api.cohere.ai/v1/${endpoint}`;
+            const headers = {
+                'Authorization': `Bearer ${apiKey}`,
+                'Content-Type': 'application/json',
+                'Cohere-Version': '2022-12-06'
+            };
+             const modelId = `model_${endpoint.replace(/\s+/g, '_')}`;
+
+
+            try {
+                switch(endpoint) {
+                    case 'generate':
+                        data = {
+                            prompt: promptText,
+                            model: document.getElementById(modelId).value,
+                            max_tokens: parseInt(document.getElementById('max_tokens').value) || 300,
+                            temperature: parseFloat(document.getElementById('temperature_generate').value),
+                            k: parseInt(document.getElementById('k_generate').value),
+                            p: parseFloat(document.getElementById('p_generate').value)
+                        };
+                        break;
+                    case 'chat':
+                        let chatHistory = [];
+                        if (document.getElementById('conversation').value.trim() !== "") {
+                            try { chatHistory = JSON.parse(document.getElementById('conversation').value); }
+                            catch (e) { throw new Error("Invalid JSON in Chat History."); }
+                        }
+                        data = {
+                            message: promptText,
+                            model: document.getElementById(modelId).value,
+                            chat_history: chatHistory,
+                            temperature: parseFloat(document.getElementById('temperature_chat').value),
+                        };
+                        if (document.getElementById('preamble_chat').value.trim() !== "") {
+                            data.preamble = document.getElementById('preamble_chat').value;
+                        }
+                        break;
+                    case 'embed':
+                        data = {
+                            texts: [promptText],
+                            model: document.getElementById(modelId).value,
+                            truncate: document.getElementById('truncate_embed').value,
+                            input_type: document.getElementById('input_type_embed').value
+                        };
+                        break;
+                    case 'classify':
+                        let inputsForClassify = [promptText];
+                        if (document.getElementById('inputs_classify').value.trim() !== "") {
+                            try { inputsForClassify = JSON.parse(document.getElementById('inputs_classify').value); }
+                            catch (e) { throw new Error("Invalid JSON in Classify Inputs."); }
+                        }
+                        let examplesForClassify = [];
+                        if (document.getElementById('examples_classify').value.trim() !== "") {
+                            try { examplesForClassify = JSON.parse(document.getElementById('examples_classify').value); }
+                            catch (e) { throw new Error("Invalid JSON in Classify Examples."); }
+                        }
+                        data = {
+                            inputs: inputsForClassify,
+                            examples: examplesForClassify,
+                            model: document.getElementById(modelId).value
+                        };
+                        if (examplesForClassify.length === 0) delete data.examples;
+                        break;
+                    case 'tokenize': data = { text: promptText }; break;
+                    case 'detokenize':
+                        try { data = { tokens: JSON.parse(promptText) }; }
+                        catch (e) { throw new Error("For detokenize, prompt must be a JSON array of numbers."); }
+                        break;
+                    case 'summarize':
+                        data = {
+                            text: promptText,
+                            model: document.getElementById(modelId).value,
+                            length: document.getElementById('length_summarize').value,
+                            format: document.getElementById('format_summarize').value,
+                            extractiveness: document.getElementById('extractiveness_summarize').value,
+                            temperature: parseFloat(document.getElementById('temperature_summarize').value)
+                        };
+                        break;
+                    default: throw new Error("Unknown endpoint selected.");
+                }
+
+                const response = await axios.post(url, data, { headers });
+                if (endpoint === 'generate') { /* Output handling unchanged */ }
+                // ... rest of output handling ...
+                if (endpoint === 'generate') {
+                    outputDiv.textContent = response.data.generations ? response.data.generations.map(gen => gen.text).join("\n---\n") : JSON.stringify(response.data, null, 2);
+                } else if (endpoint === 'chat') {
+                    outputDiv.textContent = `Chatbot: ${response.data.text}\n\nChat History (for next turn):\n${JSON.stringify(response.data.chat_history, null, 2)}`;
+                    document.getElementById('conversation').value = JSON.stringify(response.data.chat_history, null, 2);
+                } else if (endpoint === 'summarize' && response.data.summary) {
+                    outputDiv.textContent = `Summary:\n${response.data.summary}`;
+                } else if (endpoint === 'summarize' && response.data.generations) {
+                     outputDiv.textContent = `Summary:\n${response.data.generations[0].text}`;
+                } else {
+                    outputDiv.textContent = JSON.stringify(response.data, null, 2);
+                }
+                apiStatus.textContent = "API call successful!";
+                apiStatus.style.color = "var(--primary-color)";
+
+            } catch (error) { /* Error handling unchanged */
+                console.error("API Error:", error);
+                let errorMessage = "An error occurred. ";
+                if (error.message.startsWith("Invalid JSON")) {
+                    errorMessage = error.message;
+                } else if (error.response) {
+                    errorMessage += `Status: ${error.response.status}. Message: ${JSON.stringify(error.response.data.message || error.response.data)}`;
+                } else if (error.request) {
+                    errorMessage += "No response from server. Check network or API endpoint.";
+                } else {
+                    errorMessage += error.message;
+                }
+                outputDiv.textContent = errorMessage;
+                apiStatus.textContent = "API Call Failed.";
+                apiStatus.style.color = "var(--accent-color)";
+            } finally {
+                loader.style.display = 'none';
+                executeButton.disabled = false;
+            }
+        }
+
+
+        async function generateGame() {
+            stopCurrentGame();
+            outputDiv.style.display = 'none';
+            gameCanvas.style.display = 'block';
+            loader.style.display = 'block';
+            executeButton.disabled = true;
+            // gameInfoDiv.innerHTML = ''; // Clear at the start
+
+            const gameType = document.getElementById('gameType').value;
+            const primaryColor = document.getElementById('primaryColor').value;
+            const secondaryColor = document.getElementById('secondaryColor').value;
+            const gameSpeed = parseInt(document.getElementById('gameSpeed').value) || 5;
+            const userRequestedCanvasSize = parseInt(document.getElementById('canvasSize').value) || 400;
+            const gameTheme = document.getElementById('gameTheme').value;
+
+            // Set gameInfoDiv content *before* measuring its height for layout calculations
+            gameInfoDiv.innerHTML = `<h2>Loading ${gameType.replace(/([A-Z])/g, ' $1').trim()}...</h2>`;
+            if (gameTheme && gameType !== 'aiStoryAdventure') gameInfoDiv.innerHTML += `<p>Theme: ${gameTheme}</p>`;
+
+
+            const mainElement = document.querySelector('.main');
+            const mainComputedStyle = window.getComputedStyle(mainElement);
+            // Calculate padding of .main. clientWidth/Height includes padding.
+            const mainPaddingLR = parseFloat(mainComputedStyle.paddingLeft) + parseFloat(mainComputedStyle.paddingRight);
+            const mainPaddingTB = parseFloat(mainComputedStyle.paddingTop) + parseFloat(mainComputedStyle.paddingBottom);
+
+            const canvasMarginTop = 15; // Based on #gameCanvas CSS
+            const canvasBorderWidth = 2; // Based on #gameCanvas CSS
+
+            // Available content width in .main for the canvas and its own surrounding elements
+            let contentWidthInMain = mainElement.clientWidth - mainPaddingLR;
+             // Available content height in .main
+            let contentHeightInMain = mainElement.clientHeight - mainPaddingTB - gameInfoDiv.offsetHeight - canvasMarginTop;
+
+            // The canvas element itself (border-box) will take up this much space
+            let maxCanvasElementWidth = contentWidthInMain;
+            let maxCanvasElementHeight = contentHeightInMain;
+
+
+            // The drawing surface (canvas.width/height) is the element size minus its own borders
+            let maxDrawingWidth = maxCanvasElementWidth - (2 * canvasBorderWidth);
+            let maxDrawingHeight = maxCanvasElementHeight - (2 * canvasBorderWidth);
+
+
+            let dynamicSize = Math.min(userRequestedCanvasSize, maxDrawingWidth, maxDrawingHeight);
+            dynamicSize = Math.max(150, dynamicSize); // Minimum practical size for the drawing surface
+
+            gameCanvas.width = dynamicSize;
+            gameCanvas.height = dynamicSize;
+
+
+            await new Promise(resolve => setTimeout(resolve, 100)); // Shorter delay
+
+            switch(gameType) {
+                case 'snake':
+                    generateSnakeGame(primaryColor, secondaryColor, gameSpeed, dynamicSize, gameTheme);
+                    break;
+                case 'tetris':
+                    generateTetrisGame(primaryColor, secondaryColor, gameSpeed, dynamicSize, gameTheme);
+                    break;
+                case 'pong':
+                    generatePongGame(primaryColor, secondaryColor, gameSpeed, dynamicSize, gameTheme);
+                    break;
+                case 'aiStoryAdventure':
+                    // AI Story adventure doesn't use the canvas in the same way, it uses outputDiv
+                    gameCanvas.style.display = 'none'; // Explicitly hide canvas
+                    outputDiv.style.display = 'block'; // Explicitly show output
+                    await generateAIStoryAdventureGame(gameTheme);
+                    break;
+                default:
+                     gameInfoDiv.innerHTML = `<p style="color: var(--accent-color);">Selected game type '${gameType}' is not implemented.</p>`;
+                     gameCanvas.style.display = 'none';
+            }
+            loader.style.display = 'none';
+            executeButton.disabled = false;
+        }
+
+        // --- SNAKE GAME --- (generateSnakeGame and other game functions largely unchanged but use the passed 'dynamicSize' now called 'canvasSize' in their scope)
+        function generateSnakeGame(snakeColor, foodColor, speed, canvasSize, theme) {
+            stopCurrentGame(); // Clears previous listeners and intervals
+            gameInfoDiv.innerHTML = `<h2>Snake Game</h2><p>Use arrow keys or WASD. Theme: ${theme || 'Classic'}</p>`;
+            // Ensure canvasSize is at least a certain value for grid calculations
+            canvasSize = Math.max(150, canvasSize);
+            const gridSize = Math.floor(canvasSize / 30); // Adjusted grid size for better playability
+            let snake = [{x: Math.floor(canvasSize / (2 * gridSize)) * gridSize, y: Math.floor(canvasSize / (2 * gridSize)) * gridSize}];
+            let food = {x: 0, y: 0};
+            let dx = gridSize;
+            let dy = 0;
+            let score = 0;
+            let changingDirection = false;
+
+            function drawRect(x, y, width, height, color, strokeColor = "rgba(0,0,0,0.1)") { /* ... */
+                ctx.fillStyle = color;
+                ctx.fillRect(x, y, width, height);
+                if (gridSize > 5) { // Only draw stroke if blocks are reasonably large
+                    ctx.strokeStyle = strokeColor;
+                    ctx.strokeRect(x, y, width, height);
+                }
+            }
+            function drawSnake() { snake.forEach(part => drawRect(part.x, part.y, gridSize, gridSize, snakeColor)); }
+            function drawFood() { /* ... */
+                drawRect(food.x, food.y, gridSize, gridSize, foodColor);
+                if (gridSize > 5) {
+                    ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
+                    ctx.beginPath();
+                    ctx.arc(food.x + gridSize / 2, food.y + gridSize / 2, gridSize / 3.5, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+            function moveSnake() { /* ... */
+                const head = {x: snake[0].x + dx, y: snake[0].y + dy};
+                snake.unshift(head);
+                changingDirection = false;
+                if (head.x === food.x && head.y === food.y) {
+                    score++;
+                    generateFood();
+                } else {
+                    snake.pop();
+                }
+            }
+            function generateFood() { /* ... */
+                food.x = Math.floor(Math.random() * Math.floor(canvasSize / gridSize)) * gridSize;
+                food.y = Math.floor(Math.random() * Math.floor(canvasSize / gridSize)) * gridSize;
+                if (snake.some(part => part.x === food.x && part.y === food.y)) generateFood();
+            }
+            function drawScore() { /* ... */
+                ctx.fillStyle = 'white';
+                ctx.font = `bold ${Math.max(10, Math.floor(canvasSize/30))}px Orbitron, sans-serif`;
+                ctx.textAlign = 'left';
+                ctx.fillText(`Score: ${score}`, Math.max(5, gridSize/2), Math.max(12, gridSize));
+            }
+            function checkCollision() { /* ... */
+                 const head = snake[0];
+                if (head.x < 0 || head.x >= Math.floor(canvasSize / gridSize) * gridSize || head.y < 0 || head.y >= Math.floor(canvasSize / gridSize) * gridSize) return true; // Adjusted wall collision
+                for (let i = 1; i < snake.length; i++) if (snake[i].x === head.x && snake[i].y === head.y) return true;
+                return false;
+            }
+            function gameOver() { /* ... */
+                clearInterval(currentGameInterval); // Make sure this is the correct interval variable
+                currentGameInterval = null;
+                ctx.fillStyle = 'rgba(0,0,0,0.75)';
+                ctx.fillRect(0,0, canvasSize, canvasSize);
+                ctx.fillStyle = 'white';
+                ctx.textAlign = 'center';
+                ctx.font = `bold ${Math.floor(canvasSize/12)}px Orbitron, sans-serif`;
+                ctx.fillText('GAME OVER', canvasSize/2, canvasSize/2 - Math.floor(canvasSize/20));
+                ctx.font = `${Math.floor(canvasSize/18)}px Orbitron, sans-serif`;
+                ctx.fillText(`Final Score: ${score}`, canvasSize/2, canvasSize/2 + Math.floor(canvasSize/15));
+                gameInfoDiv.innerHTML = `<h2>Snake Over! Score: ${score}</h2><p>Theme: ${theme || 'Classic'}</p><button id="playAgainSnake" style="margin:10px auto; display:block;">Play Again</button>`;
+                document.getElementById("playAgainSnake").onclick = () => generateSnakeGame(snakeColor, foodColor, speed, gameCanvas.width, theme); // Use current canvas width for replay
+            }
+            function gameLoop() { /* ... */
+                 if (checkCollision()) { gameOver(); return; }
+                ctx.fillStyle = '#050510'; // Canvas bg set in CSS, but can be overridden
+                ctx.fillRect(0, 0, canvasSize, canvasSize);
+                drawFood(); moveSnake(); drawSnake(); drawScore();
+            }
+             currentKeyListener = (event) => { /* key listener unchanged */
+                if (changingDirection) return;
+                const key = event.key.toLowerCase();
+                const goingUp = dy === -gridSize, goingDown = dy === gridSize, goingLeft = dx === -gridSize, goingRight = dx === gridSize;
+                if ((key === 'arrowup' || key === 'w') && !goingDown) { dx = 0; dy = -gridSize; changingDirection = true;}
+                if ((key === 'arrowdown' || key === 's') && !goingUp) { dx = 0; dy = gridSize; changingDirection = true;}
+                if ((key === 'arrowleft' || key === 'a') && !goingRight) { dx = -gridSize; dy = 0; changingDirection = true;}
+                if ((key === 'arrowright' || key === 'd') && !goingLeft) { dx = gridSize; dy = 0; changingDirection = true;}
+            };
+            document.addEventListener('keydown', currentKeyListener);
+            generateFood();
+            currentGameInterval = setInterval(gameLoop, Math.max(60, 280 - speed * 22)); // Adjusted speed scaling
+        }
+
+
+        // --- TETRIS GAME (Basic Implementation) ---
+        function generateTetrisGame(pColor, sColor, speed, canvasSize, theme) { // canvasSize is the max square dimension
+            stopCurrentGame();
+            gameInfoDiv.innerHTML = `<h2>Tetris</h2><p>Use ← → ↓ to move/drop, ↑ or 'x' to rotate. Theme: ${theme || 'Classic'}</p>`;
+
+            const COLS = 10;
+            const ROWS = 20;
+            // Calculate BLOCK_SIZE based on making the game fit, usually height-constrained
+            const BLOCK_SIZE_BY_HEIGHT = Math.floor(canvasSize / ROWS);
+            // Calculate potential BLOCK_SIZE if width-constrained (canvasSize might be wider than needed for 10 cols)
+            const maxBoardWidthPossible = canvasSize * (COLS / ROWS); // Theoretical width if using full height
+            const BLOCK_SIZE_BY_WIDTH = Math.floor(maxBoardWidthPossible / COLS);
+
+            const BLOCK_SIZE = Math.max(8, Math.min(BLOCK_SIZE_BY_HEIGHT, BLOCK_SIZE_BY_WIDTH)); // Ensure blocks are not too tiny
+
+            const BOARD_WIDTH = COLS * BLOCK_SIZE;
+            const BOARD_HEIGHT = ROWS * BLOCK_SIZE;
+
+            // Center the board on the canvas if canvas is larger
+            const offsetX = Math.floor((gameCanvas.width - BOARD_WIDTH) / 2);
+            const offsetY = Math.floor((gameCanvas.height - BOARD_HEIGHT) / 2);
+
+
+            gameCanvas.width = Math.max(BOARD_WIDTH, canvasSize); // Use calculated board width or original canvas if board is smaller
+            gameCanvas.height = Math.max(BOARD_HEIGHT, canvasSize); // Use calculated board height or original canvas
+            // Clear the whole canvas initially
+            ctx.clearRect(0,0, gameCanvas.width, gameCanvas.height);
+
+
+            const board = Array.from({ length: ROWS }, () => Array(COLS).fill(0));
+            const colors = [null, pColor, sColor, '#00FFFF', '#FFFF00', '#FF00FF', '#FFA500', '#0000FF'];
+
+            const SHAPES = [ /* SHAPES array unchanged */
+                [[1,1,1,1]],[[1,1],[1,1]],[[0,1,0],[1,1,1]],[[1,0,0],[1,1,1]],
+                [[0,0,1],[1,1,1]],[[0,1,1],[1,1,0]],[[1,1,0],[0,1,1]]
+            ];
+
+            let currentPiece, currentX, currentY, score = 0, dropCounter = 0;
+            let dropInterval = Math.max(100, 1000 - speed * 80);
+
+            function newPiece() { /* newPiece unchanged */
+                const typeId = Math.floor(Math.random() * SHAPES.length);
+                currentPiece = SHAPES[typeId].map(row => row.slice());
+                currentX = Math.floor(COLS / 2) - Math.floor(currentPiece[0].length / 2);
+                currentY = 0;
+                if (collides(currentPiece, currentX, currentY)) gameOver();
+            }
+            function rotate(matrix) { /* rotate unchanged */
+                const N = matrix.length; const M = matrix[0].length;
+                const result = Array.from({ length: M }, () => Array(N).fill(0));
+                for (let r = 0; r < N; r++) for (let c = 0; c < M; c++) result[c][N - 1 - r] = matrix[r][c];
+                return result;
+            }
+            function collides(piece, x, y) { /* collides unchanged */
+                for (let r = 0; r < piece.length; r++) {
+                    for (let c = 0; c < piece[r].length; c++) {
+                        if (piece[r][c] && ( (board[r + y] && board[r + y][c + x]) !== 0 || c + x < 0 || c + x >= COLS || r + y >= ROWS )) return true;
+                    }
+                } return false;
+            }
+            function merge(piece, x, y) { /* merge unchanged */
+                piece.forEach((row, r) => row.forEach((value, c) => {
+                    if (value) board[r + y][c + x] = Math.floor(Math.random() * (colors.length -1)) + 1;
+                }));
+            }
+            function pieceDrop() { /* pieceDrop unchanged */
+                if (collides(currentPiece, currentX, currentY + 1)) {
+                    merge(currentPiece, currentX, currentY); sweepLines(); newPiece();
+                } else { currentY++; }
+                dropCounter = 0;
+            }
+            function sweepLines() { /* sweepLines unchanged */
+                let linesCleared = 0;
+                outer: for (let r = ROWS - 1; r >= 0; r--) {
+                    for (let c = 0; c < COLS; c++) if (board[r][c] === 0) continue outer;
+                    const row = board.splice(r, 1)[0].fill(0); board.unshift(row);
+                    linesCleared++; r++;
+                } if (linesCleared > 0) score += linesCleared * 100 * linesCleared;
+            }
+
+            function drawRectOffset(x, y, w, h, color) { // Uses offsetX, offsetY
+                ctx.fillStyle = color;
+                ctx.fillRect(x + offsetX, y + offsetY, w, h);
+                if (BLOCK_SIZE > 4) { // Only draw stroke if blocks are reasonably large
+                    ctx.strokeStyle = 'rgba(0,0,0,0.2)';
+                    ctx.strokeRect(x + offsetX, y + offsetY, w, h);
+                }
+            }
+            function drawBoard() { board.forEach((row, y) => row.forEach((value, x) => { if (value) drawRectOffset(x * BLOCK_SIZE, y * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE, colors[value]); })); }
+            function drawPiece(piece, x, y) { piece.forEach((row, r) => row.forEach((value, c) => { if (value) drawRectOffset((c + x) * BLOCK_SIZE, (r + y) * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE, colors[value] || pColor); })); }
+            function drawScore() { /* ... */
+                ctx.fillStyle = 'white';
+                const fontSize = Math.max(10, Math.floor(BOARD_WIDTH/18));
+                ctx.font = `bold ${fontSize}px Orbitron, sans-serif`;
+                ctx.textAlign = 'left';
+                ctx.fillText(`Score: ${score}`, offsetX + 5, offsetY + fontSize + 5);
+            }
+            function gameOver() { /* ... */
+                cancelAnimationFrame(currentGameInterval); // Use cancelAnimationFrame
+                currentGameInterval = null;
+                ctx.fillStyle = 'rgba(0,0,0,0.75)';
+                ctx.fillRect(offsetX, offsetY, BOARD_WIDTH, BOARD_HEIGHT); // Cover only the board area
+                ctx.fillStyle = 'white';
+                ctx.textAlign = 'center';
+                ctx.font = `bold ${Math.floor(BOARD_WIDTH/9)}px Orbitron, sans-serif`;
+                ctx.fillText('GAME OVER', offsetX + BOARD_WIDTH / 2, offsetY + BOARD_HEIGHT / 2 - Math.floor(BOARD_WIDTH/20) );
+                ctx.font = `${Math.floor(BOARD_WIDTH/14)}px Orbitron, sans-serif`;
+                ctx.fillText(`Score: ${score}`, offsetX + BOARD_WIDTH / 2, offsetY + BOARD_HEIGHT / 2 + Math.floor(BOARD_WIDTH/15));
+                gameInfoDiv.innerHTML = `<h2>Tetris Over! Score: ${score}</h2><p>Theme: ${theme || 'Classic'}</p><button id="playAgainTetris" style="margin:10px auto; display:block;">Play Again</button>`;
+                document.getElementById("playAgainTetris").onclick = () => generateTetrisGame(pColor, sColor, speed, gameCanvas.height, theme); // Use current canvas height as reference
+            }
+
+            let lastTime = 0;
+            function gameLoop(time = 0) { /* gameLoop unchanged, uses rAF */
+                if (!currentGameInterval) return; // Stop loop if game ended
+                const deltaTime = time - lastTime;
+                lastTime = time;
+                dropCounter += deltaTime;
+                if (dropCounter > dropInterval) pieceDrop();
+
+                ctx.fillStyle = '#050510'; // Main canvas bg color
+                ctx.fillRect(0, 0, gameCanvas.width, gameCanvas.height); // Clear whole canvas
+                ctx.fillStyle = '#101018'; // Slightly different color for the game board area
+                ctx.fillRect(offsetX, offsetY, BOARD_WIDTH, BOARD_HEIGHT); // Draw board background
+
+                drawBoard();
+                drawPiece(currentPiece, currentX, currentY);
+                drawScore();
+                requestAnimationFrame(gameLoop);
+            }
+
+            currentKeyListener = (event) => { /* key listener unchanged */
+                const key = event.key.toLowerCase();
+                if (key === 'arrowleft' || key === 'a') { if (!collides(currentPiece, currentX - 1, currentY)) currentX--;
+                } else if (key === 'arrowright' || key === 'd') { if (!collides(currentPiece, currentX + 1, currentY)) currentX++;
+                } else if (key === 'arrowdown' || key === 's') { pieceDrop();
+                } else if (key === 'arrowup' || key === 'x' || key === 'w') { const rotated = rotate(currentPiece); if (!collides(rotated, currentX, currentY)) currentPiece = rotated; }
+            };
+            document.addEventListener('keydown', currentKeyListener);
+            newPiece();
+            currentGameInterval = requestAnimationFrame(gameLoop); // Start game loop
+        }
+
+        // --- PONG GAME (Basic Implementation) ---
+        function generatePongGame(pColor, sColor, speed, canvasSize, theme) { /* Pong unchanged, ensure it uses canvasSize param */
+            stopCurrentGame();
+            gameInfoDiv.innerHTML = `<h2>Pong</h2><p>Player 1 (Left): W/S. Player 2 (Right): ↑/↓. Theme: ${theme || 'Classic'}</p>`;
+            canvasSize = Math.max(150, canvasSize);
+
+            const PADDLE_WIDTH = Math.max(5, Math.floor(canvasSize / 60));
+            const PADDLE_HEIGHT = Math.max(30,Math.floor(canvasSize / 6));
+            const BALL_RADIUS = Math.max(3, Math.floor(canvasSize / 70));
+            const PADDLE_SPEED = Math.max(2, Math.floor(canvasSize / 120) + speed * 0.4);
+            let ballSpeedX = Math.max(1.5, Math.floor(canvasSize / 180) + speed * 0.25);
+            let ballSpeedY = ballSpeedX * 0.6;
+
+
+            const player1 = { x: PADDLE_WIDTH, y: canvasSize / 2 - PADDLE_HEIGHT / 2, width: PADDLE_WIDTH, height: PADDLE_HEIGHT, score: 0, dy: 0 };
+            const player2 = { x: canvasSize - 2 * PADDLE_WIDTH, y: canvasSize / 2 - PADDLE_HEIGHT / 2, width: PADDLE_WIDTH, height: PADDLE_HEIGHT, score: 0, dy: 0 };
+            const ball = { x: canvasSize / 2, y: canvasSize / 2, radius: BALL_RADIUS, dx: ballSpeedX, dy: ballSpeedY };
+
+            function drawRect(x, y, w, h, color) { ctx.fillStyle = color; ctx.fillRect(x, y, w, h); }
+            function drawCircle(x, y, r, color) { ctx.fillStyle = color; ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill(); }
+            function drawNet() { for (let i = 0; i < canvasSize; i += Math.floor(canvasSize/20)) drawRect(canvasSize / 2 - Math.floor(canvasSize/200), i, Math.floor(canvasSize/100), Math.floor(canvasSize/40), 'rgba(200,200,200,0.5)'); }
+            function drawScores() {
+                ctx.fillStyle = 'white';
+                ctx.font = `bold ${Math.max(12,Math.floor(canvasSize/12))}px Orbitron`;
+                ctx.textAlign = 'center';
+                ctx.fillText(player1.score, canvasSize / 4, canvasSize / 5);
+                ctx.fillText(player2.score, (canvasSize / 4) * 3, canvasSize / 5);
+            }
+            function resetBall() { /* resetBall unchanged */
+                ball.x = canvasSize / 2; ball.y = canvasSize / 2;
+                ball.dx = (Math.random() > 0.5 ? 1 : -1) * ballSpeedX;
+                ball.dy = (Math.random() > 0.5 ? 1 : -1) * (ballSpeedY / 2 + Math.random() * ballSpeedY / 2) ;
+            }
+            function update() { /* update unchanged */
+                player1.y += player1.dy; player2.y += player2.dy;
+                player1.y = Math.max(0, Math.min(player1.y, canvasSize - PADDLE_HEIGHT));
+                player2.y = Math.max(0, Math.min(player2.y, canvasSize - PADDLE_HEIGHT));
+                ball.x += ball.dx; ball.y += ball.dy;
+                if (ball.y - ball.radius < 0 || ball.y + ball.radius > canvasSize) ball.dy *= -1;
+                if (ball.dx < 0 && ball.x - ball.radius < player1.x + player1.width && ball.x - ball.radius > player1.x && ball.y > player1.y && ball.y < player1.y + player1.height) {
+                    ball.dx *= -1.03; ball.dy = (ball.y - (player1.y + player1.height / 2)) * 0.2;
+                }
+                if (ball.dx > 0 && ball.x + ball.radius > player2.x && ball.x + ball.radius < player2.x + player2.width && ball.y > player2.y && ball.y < player2.y + player2.height) {
+                    ball.dx *= -1.03; ball.dy = (ball.y - (player2.y + player2.height / 2)) * 0.2;
+                }
+                if (ball.x - ball.radius < 0) { player2.score++; resetBall(); }
+                else if (ball.x + ball.radius > canvasSize) { player1.score++; resetBall(); }
+                if (player1.score >= 5 || player2.score >= 5) gameOver(); // Win at 5 points
+            }
+            function gameOver() { /* ... */
+                clearInterval(currentGameInterval);
+                currentGameInterval = null;
+                ctx.fillStyle = 'rgba(0,0,0,0.75)'; ctx.fillRect(0,0, canvasSize, canvasSize);
+                ctx.fillStyle = 'white'; ctx.textAlign = 'center';
+                const winner = player1.score >= 5 ? "Player 1" : "Player 2";
+                ctx.font = `bold ${Math.floor(canvasSize/10)}px Orbitron, sans-serif`;
+                ctx.fillText(`${winner} Wins!`, canvasSize/2, canvasSize/2 - Math.floor(canvasSize/20));
+                ctx.font = `${Math.floor(canvasSize/15)}px Orbitron, sans-serif`;
+                ctx.fillText(`${player1.score} - ${player2.score}`, canvasSize/2, canvasSize/2 + Math.floor(canvasSize/15));
+                gameInfoDiv.innerHTML = `<h2>Pong Over! ${winner} Wins! (${player1.score}-${player2.score})</h2><p>Theme: ${theme || 'Classic'}</p><button id="playAgainPong" style="margin:10px auto; display:block;">Play Again</button>`;
+                document.getElementById("playAgainPong").onclick = () => generatePongGame(pColor, sColor, speed, gameCanvas.width, theme);
+            }
+            function gameLoop() { if(!currentGameInterval) return; update(); ctx.fillStyle = '#050510'; ctx.fillRect(0, 0, canvasSize, canvasSize); drawNet(); drawRect(player1.x, player1.y, player1.width, player1.height, pColor); drawRect(player2.x, player2.y, player2.width, player2.height, pColor); drawCircle(ball.x, ball.y, ball.radius, sColor); drawScores(); }
+
+            currentKeyListener = {
+                down: (event) => { /* keydown unchanged */
+                    const key = event.key.toLowerCase();
+                    if (key === 'w') player1.dy = -PADDLE_SPEED; else if (key === 's') player1.dy = PADDLE_SPEED;
+                    if (key === 'arrowup') player2.dy = -PADDLE_SPEED; else if (key === 'arrowdown') player2.dy = PADDLE_SPEED;
+                },
+                up: (event) => { /* keyup unchanged */
+                    const key = event.key.toLowerCase();
+                    if (key === 'w' || key === 's') player1.dy = 0;
+                    if (key === 'arrowup' || key === 'arrowdown') player2.dy = 0;
+                }
+            };
+            document.addEventListener('keydown', currentKeyListener.down);
+            document.addEventListener('keyup', currentKeyListener.up);
+            resetBall();
+            currentGameInterval = setInterval(gameLoop, 1000 / 60);
+        }
+
+        // --- AI STORY ADVENTURE GAME ---
+        let currentStoryState = {};
+        async function generateAIStoryAdventureGame(theme) { /* AI Story game logic unchanged */
+            stopCurrentGame();
+            const apiKey = document.getElementById('apiKey').value;
+            if (!apiKey) { /* ... */ gameInfoDiv.innerHTML = `<p style="color: var(--accent-color);">API Key required for AI Story Adventure.</p>`; outputDiv.style.display = 'block'; outputDiv.innerHTML = "<p>Please enter your Cohere API key.</p>"; gameCanvas.style.display = 'none'; return;  }
+
+            gameInfoDiv.innerHTML = `<h2>AI Story Adventure</h2><p>Crafting your adventure: ${theme || 'A Mysterious Journey'}</p>`;
+            gameCanvas.style.display = 'none';
+            outputDiv.style.display = 'block';
+            outputDiv.innerHTML = '';
+            loader.style.display = 'block';
+
+            const initialPrompt = `You are a master storyteller for an interactive text adventure. Theme: "${theme || 'a mysterious journey'}". Start with an engaging scene (50-100 words) and 2-4 distinct choices. Format choices like: "1. [Choice]". ONLY story text and choices. No filler.`;
+
+            try {
+                const response = await axios.post(`https://api.cohere.ai/v1/chat`, {
+                    message: initialPrompt, model: 'command-r', temperature: 0.6,
+                    preamble: "You are a text adventure game engine. Concise and direct."
+                }, { headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' } });
+                currentStoryState = { theme: theme, history: [{role: "USER", message: initialPrompt}, {role: "CHATBOT", message: response.data.text}], apiKey: apiKey };
+                renderStory(response.data.text);
+            } catch (error) { /* ... */ console.error("AI Story Init Error:", error); outputDiv.innerHTML = `<p style="color: var(--accent-color);">Failed to start story. ${error.message}</p>`; }
+            finally { loader.style.display = 'none'; }
+        }
+        function renderStory(storyText) { /* renderStory unchanged */
+            outputDiv.innerHTML = '';
+            const storyP = document.createElement('p');
+            storyP.innerText = storyText; storyP.style.cssText = "color: var(--text-light); margin-bottom: 20px; white-space: pre-line;";
+            outputDiv.appendChild(storyP);
+
+            const choiceLines = storyText.match(/^\s*([0-9]+)\.\s*(.+)/gm);
+            if (choiceLines && choiceLines.length > 0) {
+                const choicesDiv = document.createElement('div'); choicesDiv.style.marginTop = "15px";
+                choiceLines.forEach(line => {
+                    const match = line.match(/^\s*([0-9]+)\.\s*(.+)/);
+                    if (match) {
+                        const btn = document.createElement('button'); btn.innerText = `${match[1]}. ${match[2].trim()}`;
+                        btn.style.cssText = "margin: 5px; display: block; width: auto; max-width: 95%; text-align: left; background-color: var(--primary-color); color: var(--bg-dark-1); font-size: 0.9em;";
+                        btn.onclick = () => makeStoryChoice(match[1], match[2].trim());
+                        choicesDiv.appendChild(btn);
+                    }
+                });
+                outputDiv.appendChild(choicesDiv);
+                gameInfoDiv.innerHTML = `<h2>AI Story Adventure</h2><p>Theme: ${currentStoryState.theme || 'Mysterious Journey'}. Your move:</p>`;
+            } else { /* ... */ outputDiv.appendChild(document.createTextNode("The story pauses... or ends.")); gameInfoDiv.innerHTML = `<h2>AI Story Adventure</h2><p>The End?</p>`; }
+        }
+       async function makeStoryChoice(choiceNum, choiceTxt) { /* makeStoryChoice unchanged */
+            if (!currentStoryState.apiKey) { outputDiv.innerHTML = `<p style="color: var(--accent-color);">Game state error. Please restart.</p>`; return; }
+            loader.style.display = 'block'; outputDiv.innerHTML = '<p>The story continues...</p>';
+            const userMsg = `I chose: "${choiceTxt}". Continue the story with new outcomes and 2-4 new choices. Theme: "${currentStoryState.theme}". Format choices like: "1. [Choice]". ONLY story and choices.`;
+            currentStoryState.history.push({role: "USER", message: userMsg});
+            if (currentStoryState.history.length > 12) currentStoryState.history = currentStoryState.history.slice(-12);
+
+            try {
+                const response = await axios.post(`https://api.cohere.ai/v1/chat`, {
+                    chat_history: currentStoryState.history, message: userMsg, model: 'command-r', temperature: 0.65,
+                    preamble: "You are a text adventure game engine. Concise and direct."
+                }, { headers: { 'Authorization': `Bearer ${currentStoryState.apiKey}`, 'Content-Type': 'application/json' } });
+                currentStoryState.history.push({role: "CHATBOT", message: response.data.text});
+                renderStory(response.data.text);
+            } catch (error) { /* ... */ console.error("AI Story Continue Error:", error); outputDiv.innerHTML = `<p style="color: var(--accent-color);">Failed to continue story. ${error.message}</p>`; }
+            finally { loader.style.display = 'none'; }
+        }
+
+        // Initialize
+        updateAdditionalParams();
+        document.getElementById('prompt').placeholder = "Enter prompt for API calls. For 'Detokenize', use JSON array of token IDs e.g. [101,203]. For 'Classify', use 'Inputs' field for multiple texts or this for one if 'Inputs' is empty.";
+    </script>
+</body>
+</html>
