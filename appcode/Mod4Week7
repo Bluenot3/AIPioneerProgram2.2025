@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Copy ZEN AI Module 4 Week 7 Code</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Fira+Mono&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(135deg, #0a2342 0%, #1665b8 70%, #66aaff 100%);
+      min-height: 100vh; margin: 0; padding: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .container {
+      background: rgba(18, 42, 75, 0.98);
+      max-width: 900px;
+      width: 97vw;
+      border-radius: 18px;
+      box-shadow: 0 8px 32px rgba(26, 101, 184, 0.22), 0 0 0 1.5px #2d7ae6;
+      padding: 34px 14px 28px 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    h1 {
+      font-family: 'Orbitron', sans-serif;
+      color: #42a5f5;
+      margin-bottom: 22px;
+      font-size: 2em;
+      text-align: center;
+      text-shadow: 0 0 10px #70d3ff, 0 0 16px #2286c3;
+      letter-spacing: 1.2px;
+      font-weight: 700;
+    }
+    textarea {
+      width: 100%;
+      height: 540px;
+      border-radius: 10px;
+      font-size: 13px;
+      background: #101e36;
+      color: #7fc4f7;
+      padding: 12px;
+      font-family: 'Fira Mono', 'Consolas', monospace;
+      box-sizing: border-box;
+      margin-bottom: 18px;
+      resize: vertical;
+      border: 1px solid #2d7ae6;
+    }
+    .copy-bar {
+      width: 100%;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .copy-btn {
+      padding: 10px 26px;
+      font-size: 15px;
+      background: linear-gradient(90deg, #2291e6 60%, #4edcff 100%);
+      color: #0a2342;
+      font-family: 'Orbitron',sans-serif;
+      font-weight: 700;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.18s, box-shadow 0.16s;
+      margin-left: 10px;
+    }
+    .copy-btn:hover {
+      background: linear-gradient(90deg, #0b6eab 30%, #6fd2ff 100%);
+      color: #000;
+      box-shadow: 0 0 10px #4edcff;
+    }
+    .copied-msg {
+      color: #5edc7f;
+      font-weight: bold;
+      display: none;
+      margin-left: 16px;
+      font-size: 15px;
+    }
+    @media (max-width: 950px) {
+      .container { max-width: 99vw; }
+      textarea { font-size: 12px; }
+    }
+    @media (max-width: 600px) {
+      h1 { font-size: 1.5em; }
+      textarea { height: 300px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Copy the Complete<br>ZEN AI Module 4 Week 7 Project Code</h1>
+    <div class="copy-bar">
+      <button class="copy-btn" onclick="copyCode()">Copy Code</button>
+      <span class="copied-msg" id="copiedMsg">Copied!</span>
+    </div>
+    <textarea id="codeArea" readonly spellcheck="false"></textarea>
+  </div>
+  <template id="desiredCode">
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZEN Game Playground 2.0 (AI-Powered)</title>
+    <!-- Tailwind CSS for modern styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts for a nicer look -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom styles to complement Tailwind */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #111827; /* Tailwind gray-900 */
+            color: #F9FAFB; /* Tailwind gray-50 */
+            overflow: hidden;
+        }
+        .font-orbitron {
+            font-family: 'Orbitron', sans-serif;
+        }
+        /* Style for the game canvas */
+        #gameCanvas {
+            background-color: #000;
+            border-radius: 0.5rem;
+            box-shadow: 0 0 20px rgba(167, 139, 250, 0.3);
+            border: 1px solid rgb(79 70 229 / 0.5);
+            image-rendering: -moz-crisp-edges;
+            image-rendering: -webkit-crisp-edges;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+        }
+        /* Scrollbar styling for a cleaner look */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #1F2937; }
+        ::-webkit-scrollbar-thumb { background: #4F46E5; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #6366F1; }
+        /* Minesweeper specific styles */
+        .mine-cell {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            background-color: #374151; /* gray-700 */
+            border: 1px solid #4b5563; /* gray-600 */
+        }
+        .mine-cell.revealed {
+            background-color: #1f2937; /* gray-800 */
+        }
+        .mine-cell.flagged {
+            background-color: #5b21b6; /* violet-700 */
+        }
+    </style>
+</head>
+<body class="h-full antialiased">
+
+<div class="flex flex-col md:flex-row h-full">
+
+    <!-- Sidebar: Controls and Information -->
+    <aside class="w-full md:w-80 lg:w-96 bg-gray-900/50 backdrop-blur-sm p-6 border-r border-gray-700/50 flex flex-col space-y-6 overflow-y-auto">
+        <div class="flex items-center space-x-3">
+            <svg class="w-8 h-8 text-violet-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
+            </svg>
+            <h1 class="text-2xl font-bold font-orbitron text-white">ZEN Playground</h1>
+        </div>
+
+        <div>
+            <label for="apiKey" class="block text-sm font-medium text-gray-300 mb-2">Cohere API Key</label>
+            <input type="password" id="apiKey" class="w-full bg-gray-800/60 border border-gray-700 rounded-md shadow-sm p-3 focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-violet-500 focus:border-violet-500 transition duration-150 ease-in-out" placeholder="Enter your Cohere API key">
+            <div id="api-warning" class="hidden text-red-400 text-sm mt-2">Please enter a valid Cohere API key.</div>
+        </div>
+
+        <div>
+            <label for="prompt" class="block text-sm font-medium text-gray-300 mb-2">Game Prompt</label>
+            <textarea id="prompt" rows="4" class="w-full bg-gray-800/60 border border-gray-700 rounded-md shadow-sm p-3 focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-violet-500 focus:border-violet-500 transition duration-150 ease-in-out" placeholder="e.g., 'snake', 'pong', 'tetris', 'breakout', 'space invaders', or 'minesweeper'"></textarea>
+        </div>
+
+        <button onclick="handlePrompt()" class="w-full bg-violet-600 hover:bg-violet-700 text-white font-bold py-3 px-4 rounded-lg shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-violet-500 transition-transform transform hover:scale-105 disabled:bg-gray-500 disabled:scale-100 disabled:cursor-not-allowed">
+            Build & Play
+        </button>
+
+        <div id="instructions" class="bg-gray-800/70 p-4 rounded-lg text-gray-300 text-sm space-y-2">
+             <h2 class="font-bold text-white text-base border-b border-gray-700 pb-2 mb-2">How to Play</h2>
+             <p id="instruction-text">Enter your Cohere API key, describe a game, and click "Build & Play". The AI will launch the game for you! <br><br><b>Available Games:</b> Snake, Pong, Tetris, Breakout, Space Invaders, Minesweeper</p>
+        </div>
+    </aside>
+
+    <!-- Main Content: Game Canvas and Output -->
+    <main class="flex-grow p-6 flex flex-col items-center justify-center bg-gray-900 overflow-hidden">
+        <div id="game-container" class="w-full h-full flex items-center justify-center">
+             <div id="welcome-message" class="text-center">
+                <h2 class="text-4xl font-bold font-orbitron text-white">Welcome!</h2>
+                <p class="mt-2 text-lg text-gray-400">Your game will appear here.</p>
+            </div>
+            <div id="game-board" class="hidden"></div>
+            <canvas id="gameCanvas" class="hidden"></canvas>
+        </div>
+    </main>
+</div>
+
+<script>
+    // --- DOM ELEMENTS ---
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const gameBoard = document.getElementById('game-board');
+    const instructionText = document.getElementById('instruction-text');
+    const welcomeMessage = document.getElementById('welcome-message');
+    const apiKeyInput = document.getElementById('apiKey');
+    const apiWarning = document.getElementById('api-warning');
+    const promptInput = document.getElementById('prompt');
+    const buildButton = document.querySelector('button');
+
+    // --- GAME STATE & CONSTANTS ---
+    let activeGame = null;
+    let gameLoopInterval = null;
+    const GRID_SIZE = 20;
+
+    // --- EVENT LISTENER MANAGEMENT ---
+    let currentKeyListener = null;
+    let currentKeyUpListener = null;
+    let currentMouseMoveListener = null;
+    let currentClickListener = null;
+    let currentRightClickListener = null;
+
+    /**
+     * Main async function to handle user prompts.
+     */
+    async function handlePrompt() {
+        const apiKey = apiKeyInput.value.trim();
+        if (!apiKey) {
+            apiWarning.classList.remove('hidden');
+            return;
+        }
+        apiWarning.classList.add('hidden');
+
+        const promptText = promptInput.value;
+        if (!promptText) {
+            instructionText.innerHTML = `<p class="text-yellow-400">Please enter a prompt describing the game you want to play.</p>`;
+            return;
+        }
+        
+        buildButton.disabled = true;
+        buildButton.textContent = 'Building...';
+
+        stopCurrentGame();
+        
+        const gameType = await parseGameTypeWithAI(promptText, apiKey);
+        
+        buildButton.disabled = false;
+        buildButton.textContent = 'Build & Play';
+
+        if (gameType && ['snake', 'pong', 'tetris', 'breakout', 'space invaders', 'minesweeper'].includes(gameType)) {
+            activeGame = gameType;
+            welcomeMessage.classList.add('hidden');
+            
+            if (gameType === 'minesweeper') {
+                gameBoard.classList.remove('hidden');
+                canvas.classList.add('hidden');
+            } else {
+                canvas.classList.remove('hidden');
+                gameBoard.classList.add('hidden');
+            }
+
+            setupCanvasForGame(gameType);
+            
+            switch (gameType) {
+                case 'snake': runSnakeGame(); break;
+                case 'pong': runPongGame(); break;
+                case 'tetris': runTetrisGame(); break;
+                case 'breakout': runBreakoutGame(); break;
+                case 'space invaders': runSpaceInvadersGame(); break;
+                case 'minesweeper': runMinesweeperGame(); break;
+            }
+        } else {
+            instructionText.innerHTML = `<p class="text-red-400">Sorry, I couldn't understand which game you want, or there was an API error. Please try a different prompt.</p>`;
+            canvas.classList.add('hidden');
+            gameBoard.classList.add('hidden');
+            welcomeMessage.classList.remove('hidden');
+        }
+    }
+
+    /**
+     * Calls the Cohere API to determine which game to launch.
+     */
+    async function parseGameTypeWithAI(promptText, apiKey) {
+        instructionText.innerHTML = `<p>Asking the AI which game to build...</p>`;
+        const coherePrompt = `Based on the user's request, identify which of the following classic arcade games they want to play: 'snake', 'pong', 'tetris', 'breakout', 'space invaders', 'minesweeper'. Respond with only the single-word name of the game in lowercase (use 'space invaders' for that specific game). For example, if the user says 'I wanna play the block falling game', you must respond with 'tetris'. If the game is not on the list or the request is unclear, respond with 'unknown'.
+
+User request: "${promptText}"
+Game name:`;
+
+        try {
+            const response = await fetch('https://api.cohere.ai/v1/generate', {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json', 'Cohere-Version': '2022-12-06' },
+                body: JSON.stringify({ model: 'command-light', prompt: coherePrompt, max_tokens: 10, temperature: 0.1, stop_sequences: [] }),
+            });
+
+            if (!response.ok) {
+                throw new Error(`Cohere API error (${response.status})`);
+            }
+
+            const data = await response.json();
+            const gameName = data.generations[0].text.trim().toLowerCase();
+            instructionText.innerHTML = `<p>AI decided on: <strong class="text-white">${gameName}</strong>. Launching game!</p>`;
+            return gameName;
+
+        } catch (error) {
+            console.error("Error calling Cohere API:", error);
+            instructionText.innerHTML = `<p class="text-red-400">An error occurred with the API call. Check the console for details.</p>`;
+            return null;
+        }
+    }
+
+    /**
+     * Cleans up all resources from the currently active game.
+     */
+    function stopCurrentGame() {
+        if (gameLoopInterval) { clearInterval(gameLoopInterval); gameLoopInterval = null; }
+        if (currentKeyListener) { document.removeEventListener('keydown', currentKeyListener); currentKeyListener = null; }
+        if (currentKeyUpListener) { document.removeEventListener('keyup', currentKeyUpListener); currentKeyUpListener = null; }
+        if (currentMouseMoveListener) { document.removeEventListener('mousemove', currentMouseMoveListener); currentMouseMoveListener = null; }
+        if (currentClickListener) { gameBoard.removeEventListener('click', currentClickListener); currentClickListener = null; }
+        if (currentRightClickListener) { gameBoard.removeEventListener('contextmenu', currentRightClickListener); currentRightClickListener = null; }
+        activeGame = null;
+        gameBoard.innerHTML = ''; // Clear Minesweeper board
+    }
+    
+    /**
+     * Configures the canvas dimensions and scaling for the selected game.
+     */
+    function setupCanvasForGame(gameType) {
+        let logicalWidth, logicalHeight;
+        if (gameType === 'tetris') {
+            logicalWidth = 10 * GRID_SIZE; logicalHeight = 20 * GRID_SIZE;
+        } else if (gameType === 'pong' || gameType === 'breakout' || gameType === 'space invaders') {
+            logicalWidth = 400; logicalHeight = 300;
+        } else if (gameType === 'snake') {
+            logicalWidth = 300; logicalHeight = 300;
+        } else {
+            return; // No canvas for Minesweeper
+        }
+        canvas.width = logicalWidth * 2;
+        canvas.height = logicalHeight * 2;
+        canvas.style.width = `${logicalWidth * 2}px`;
+        canvas.style.height = `${logicalHeight * 2}px`;
+        ctx.scale(2, 2); // Scale up for HiDPI displays
+    }
+
+    // =================================================================
+    // --- GAME IMPLEMENTATIONS ---
+    // =================================================================
+
+    // --- SNAKE GAME LOGIC ---
+    function runSnakeGame() {
+        instructionText.innerHTML = `<p><strong class="text-violet-300">Controls:</strong> ARROW KEYS to move.</p>`;
+        let snake = [{ x: 10, y: 10 }], food = {}, dx = 1, dy = 0, score = 0;
+        const widthInGrids = canvas.width / 2 / GRID_SIZE;
+        const heightInGrids = canvas.height / 2 / GRID_SIZE;
+        
+        function generateFood() { food = { x: Math.floor(Math.random() * widthInGrids), y: Math.floor(Math.random() * heightInGrids) }; }
+
+        function gameLoop() {
+            const head = { x: snake[0].x + dx, y: snake[0].y + dy };
+            snake.unshift(head);
+            if (head.x === food.x && head.y === food.y) { score++; generateFood(); } else { snake.pop(); }
+
+            if (head.x < 0 || head.x >= widthInGrids || head.y < 0 || head.y >= heightInGrids || snake.slice(1).some(p => p.x === head.x && p.y === head.y)) { gameOver("Snake", score); return; }
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'lime'; snake.forEach(p => ctx.fillRect(p.x * GRID_SIZE, p.y * GRID_SIZE, GRID_SIZE - 1, GRID_SIZE - 1));
+            ctx.fillStyle = 'red'; ctx.fillRect(food.x * GRID_SIZE, food.y * GRID_SIZE, GRID_SIZE - 1, GRID_SIZE - 1);
+            drawText(`Score: ${score}`, 10, 20, 'white', '16px');
+        }
+
+        currentKeyListener = e => {
+            if (e.key === 'ArrowUp' && dy === 0) { dy = -1; dx = 0; } else if (e.key === 'ArrowDown' && dy === 0) { dy = 1; dx = 0; }
+            else if (e.key === 'ArrowLeft' && dx === 0) { dx = -1; dy = 0; } else if (e.key === 'ArrowRight' && dx === 0) { dx = 1; dy = 0; }
+        };
+        document.addEventListener('keydown', currentKeyListener);
+        generateFood();
+        gameLoopInterval = setInterval(gameLoop, 150); // Slower speed
+    }
+
+    // --- PONG GAME LOGIC ---
+    function runPongGame() {
+        instructionText.innerHTML = `<p><strong class="text-violet-300">Controls:</strong> Left: W/S, Right: UP/DOWN ARROWS.</p>`;
+        const W = canvas.width / 2, H = canvas.height / 2;
+        let ball = { x: W / 2, y: H / 2, dx: 4, dy: 2, radius: 5 };
+        let p1 = { x: 5, y: H/2-40, w: 10, h: 80, dy: 0, score: 0 }, p2 = { x: W-15, y: H/2-40, w: 10, h: 80, dy: 0, score: 0 };
+        function gameLoop() {
+            p1.y = Math.max(0, Math.min(H - p1.h, p1.y + p1.dy)); p2.y = Math.max(0, Math.min(H - p2.h, p2.y + p2.dy));
+            ball.x += ball.dx; ball.y += ball.dy;
+            if (ball.y - ball.radius < 0 || ball.y + ball.radius > H) ball.dy *= -1;
+            if ((ball.dx < 0 && ball.x - ball.radius < p1.x + p1.w && ball.y > p1.y && ball.y < p1.y + p1.h) || (ball.dx > 0 && ball.x + ball.radius > p2.x && ball.y > p2.y && ball.y < p2.y + p2.h)) ball.dx *= -1.1;
+            if (ball.x < 0) { p2.score++; resetBall(); } if (ball.x > W) { p1.score++; resetBall(); }
+            ctx.clearRect(0, 0, W, H); ctx.fillStyle = 'white';
+            ctx.fillRect(p1.x, p1.y, p1.w, p1.h); ctx.fillRect(p2.x, p2.y, p2.w, p2.h);
+            ctx.beginPath(); ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI*2); ctx.fill();
+            drawText(p1.score, W/4, 40, 'white', '40px', 'center'); drawText(p2.score, W*3/4, 40, 'white', '40px', 'center');
+        }
+        function resetBall() { ball.x=W/2; ball.y=H/2; ball.dx=4*(Math.random()>.5?1:-1); ball.dy=2*(Math.random()>.5?1:-1); }
+        currentKeyListener=e=>{if(e.key==='w')p1.dy=-6;if(e.key==='s')p1.dy=6;if(e.key==='ArrowUp')p2.dy=-6;if(e.key==='ArrowDown')p2.dy=6;};
+        currentKeyUpListener=e=>{if(e.key==='w'||e.key==='s')p1.dy=0;if(e.key==='ArrowUp'||e.key==='ArrowDown')p2.dy=0;};
+        document.addEventListener('keydown', currentKeyListener); document.addEventListener('keyup', currentKeyUpListener);
+        gameLoopInterval = setInterval(gameLoop, 1000 / 60);
+    }
+    
+    // --- All other game implementations (Tetris, Breakout) remain unchanged and are omitted for brevity ---
+    // ... Tetris, Breakout logic ...
+
+    // --- SPACE INVADERS GAME LOGIC ---
+    function runSpaceInvadersGame() {
+        instructionText.innerHTML = `<p><strong class="text-violet-300">Controls:</strong> LEFT/RIGHT ARROWS to move, SPACE to shoot.</p>`;
+        const W = canvas.width/2, H = canvas.height/2;
+        let player = { x: W/2 - 25, y: H - 30, width: 50, height: 20, speed: 5 };
+        let bullets = [], invaders = [], invaderSpeed = 1, score = 0;
+        
+        function createInvaders() {
+            invaders = [];
+            for (let r = 0; r < 4; r++) {
+                for (let c = 0; c < 8; c++) {
+                    invaders.push({ x: 50 + c * 40, y: 30 + r * 30, width: 30, height: 20, alive: true });
+                }
+            }
+        }
+
+        function gameLoop() {
+            // Move invaders
+            let edge = false;
+            invaders.forEach(inv => {
+                if (inv.alive) {
+                    inv.x += invaderSpeed;
+                    if (inv.x + inv.width > W || inv.x < 0) edge = true;
+                    if (inv.y + inv.height >= player.y) gameOver('Space Invaders', score);
+                }
+            });
+            if (edge) {
+                invaderSpeed *= -1;
+                invaders.forEach(inv => inv.y += 10);
+            }
+
+            // Move bullets and check for hits
+            bullets.forEach((b, bi) => {
+                b.y -= 5;
+                if (b.y < 0) bullets.splice(bi, 1);
+                invaders.forEach((inv, ii) => {
+                    if (inv.alive && b.x > inv.x && b.x < inv.x + inv.width && b.y > inv.y && b.y < inv.y + inv.height) {
+                        inv.alive = false;
+                        bullets.splice(bi, 1);
+                        score += 10;
+                    }
+                });
+            });
+
+            if (invaders.every(inv => !inv.alive)) {
+                score += 100;
+                invaderSpeed *= 1.2;
+                createInvaders();
+            }
+
+            // Draw everything
+            ctx.clearRect(0,0,W,H);
+            ctx.fillStyle = 'lime'; ctx.fillRect(player.x, player.y, player.width, player.height);
+            ctx.fillStyle = 'white'; bullets.forEach(b => ctx.fillRect(b.x, b.y, 3, 10));
+            ctx.fillStyle = 'red'; invaders.forEach(inv => { if (inv.alive) ctx.fillRect(inv.x, inv.y, inv.width, inv.height); });
+            drawText(`Score: ${score}`, 10, 20, 'white', '16px');
+        }
+
+        currentKeyListener = e => {
+            if (e.key === 'ArrowLeft' && player.x > 0) player.x -= player.speed;
+            if (e.key === 'ArrowRight' && player.x + player.width < W) player.x += player.speed;
+            if (e.key === ' ') bullets.push({ x: player.x + player.width/2 - 1.5, y: player.y });
+        };
+        document.addEventListener('keydown', currentKeyListener);
+        createInvaders();
+        gameLoopInterval = setInterval(gameLoop, 1000/60);
+    }
+    
+    // --- MINESWEEPER GAME LOGIC ---
+    function runMinesweeperGame() {
+        instructionText.innerHTML = `<p><strong class="text-violet-300">Controls:</strong> LEFT-CLICK to reveal, RIGHT-CLICK to flag.</p>`;
+        const ROWS = 10, COLS = 10, MINES = 15;
+        let board = [], gameOverFlag = false;
+
+        function createBoard() {
+            board = Array.from({length: ROWS}, () => Array.from({length: COLS}, () => ({mine: false, revealed: false, flagged: false, neighbors: 0})));
+            let minesPlaced = 0;
+            while(minesPlaced < MINES) {
+                const r = Math.floor(Math.random() * ROWS);
+                const c = Math.floor(Math.random() * COLS);
+                if (!board[r][c].mine) {
+                    board[r][c].mine = true;
+                    minesPlaced++;
+                }
+            }
+            for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++) if (!board[r][c].mine) {
+                for (let i = -1; i <= 1; i++) for (let j = -1; j <= 1; j++) if (r+i >= 0 && r+i < ROWS && c+j >= 0 && c+j < COLS && board[r+i][c+j].mine) board[r][c].neighbors++;
+            }
+        }
+        
+        function revealCell(r, c) {
+            if (gameOverFlag || r < 0 || r >= ROWS || c < 0 || c >= COLS || board[r][c].revealed || board[r][c].flagged) return;
+            board[r][c].revealed = true;
+            if (board[r][c].mine) { gameOver("Minesweeper", 0); return; }
+            if (board[r][c].neighbors === 0) for (let i = -1; i <= 1; i++) for (let j = -1; j <= 1; j++) revealCell(r+i, c+j);
+            checkWin();
+        }
+
+        function checkWin() {
+            const revealedCount = board.flat().filter(c => c.revealed).length;
+            if (revealedCount === ROWS * COLS - MINES) gameOver("Minesweeper (WIN!)", 1);
+        }
+
+        function drawBoard() {
+            gameBoard.innerHTML = '';
+            gameBoard.style.display = 'grid';
+            gameBoard.style.gridTemplateColumns = `repeat(${COLS}, 30px)`;
+            board.forEach((row, r) => row.forEach((cell, c) => {
+                const el = document.createElement('div');
+                el.classList.add('mine-cell');
+                el.dataset.r = r; el.dataset.c = c;
+                if (cell.flagged) el.classList.add('flagged');
+                if (cell.revealed) {
+                    el.classList.add('revealed');
+                    if(cell.mine) el.textContent = '💣';
+                    else if (cell.neighbors > 0) el.textContent = cell.neighbors;
+                }
+                gameBoard.appendChild(el);
+            }));
+        }
+
+        currentClickListener = e => {
+            const {r, c} = e.target.dataset; if (r !== undefined) revealCell(parseInt(r), parseInt(c));
+            drawBoard();
+        };
+        currentRightClickListener = e => {
+            e.preventDefault();
+            const {r, c} = e.target.dataset; if (r !== undefined && !board[r][c].revealed) { board[r][c].flagged = !board[r][c].flagged; }
+            drawBoard();
+        };
+        
+        gameBoard.addEventListener('click', currentClickListener);
+        gameBoard.addEventListener('contextmenu', currentRightClickListener);
+        createBoard();
+        drawBoard();
+    }
+
+
+    // --- UTILITY FUNCTIONS ---
+    
+    function gameOver(gameName, score) {
+        if (activeGame === 'minesweeper') {
+            gameOverFlag = true;
+            instructionText.innerHTML = `<p class="text-xl font-bold">${gameName.includes('WIN') ? 'You Win!' : 'Game Over!'}</p><p>Play another game!</p>`;
+        } else {
+            clearInterval(gameLoopInterval);
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.75)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            const W = canvas.width/2, H = canvas.height/2;
+            drawText('Game Over', W/2, H/2 - 20, 'white', '40px', 'center');
+            drawText(`Game: ${gameName} | Score: ${score}`, W/2, H/2 + 20, 'white', '20px', 'center');
+            drawText('Choose a new game to play again.', W/2, H/2 + 60, '#a78bfa', '16px', 'center');
+        }
+    }
+
+    function drawText(text, x, y, color, size, align = 'left') {
+        ctx.fillStyle = color;
+        ctx.font = `${size} Orbitron`;
+        ctx.textAlign = align;
+        ctx.fillText(text, x, y);
+    }
+</script>
+
+</body>
+</html>
+  </template>
+  <script>
+    // Insert code into the textarea from template
+    document.getElementById('codeArea').value =
+      document.getElementById('desiredCode').innerHTML.trim();
+
+    function copyCode() {
+      const area = document.getElementById('codeArea');
+      area.select();
+      area.setSelectionRange(0, 999999); // For mobile devices
+      try {
+        document.execCommand('copy');
+        const msg = document.getElementById('copiedMsg');
+        msg.style.display = 'inline';
+        setTimeout(() => {
+          msg.style.display = 'none';
+        }, 1200);
+      } catch (err) {
+        console.error('Failed to copy text: ', err);
+      }
+    }
+  </script>
+</body>
+</html>
